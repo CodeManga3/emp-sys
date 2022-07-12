@@ -6,6 +6,14 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
+## Setup Electron for Windows
+
+Run `npm run setup-win` to create a Windows desktop version of the application. You can find the .exe file in path: `emp-sys/release-builds/emp-sys-win32-ia32/emp-sys.exe`. You can double-click on this application to execute and test it
+
+## Build and Run Desktop version
+
+Run `npm run desk` this will run this project in a desktop version while development is in progress and can see real time changes.
+
 ## Code scaffolding
 
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
