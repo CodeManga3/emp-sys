@@ -1,0 +1,38 @@
+<div class="container" style="margin-top:10px;margin-bottom: 24px;">
+    <div class="col-sm-12 btn btn-success">
+        How To Create Organization Chart in Angular Application
+    </div>
+</div>
+<div  class="col-sm-12">
+
+    <p-organizationChart
+            [value]="data1"
+            selectionMode="single"
+            [(selection)]="selectedNode"
+            (onNodeSelect)="onNodeSelect($event)"
+            styleClass="company"
+    >
+        <ng-template let-node pTemplate="person">
+            <div class="node-header p-corner-top">
+                <div class="row">
+                    <div class="col-md-8">{{ node.label }}</div>
+                    <div class="col-md-2">
+                        <a href="#" class="text-decoration-none " >
+                            <svg class="bi bi-three-dots-vertical" width="32" height="32" >
+                                <use xlink:href="bootstrap-icons.svg#three-dots-vertical"/>
+                            </svg>
+<!--                            <i class="bi bi-three-dots-vertical"></i>-->
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="node-content">
+                <img src="app/assets/images/{{node.data.avatar}}" width="32" alt="avatar">
+                <div>{{ node.data.name }}</div>
+            </div>
+        </ng-template>
+        <ng-template let-node pTemplate="department">
+            {{ node.label }}
+        </ng-template>
+    </p-organizationChart>
+</div>

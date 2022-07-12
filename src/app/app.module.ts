@@ -1,11 +1,8 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
-
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {OrganizationChartModule} from "primeng/organizationchart";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {ToastModule} from "primeng/toast";
+import {OrgchartModule} from "./components/orgchart/orgchart.module";
 
 @NgModule({
   declarations: [
@@ -14,9 +11,7 @@ import {ToastModule} from "primeng/toast";
   imports: [
     BrowserModule,
     AppRoutingModule,
-    OrganizationChartModule,
-    BrowserAnimationsModule,
-    ToastModule
+    OrgchartModule
   ],
   providers: [],
   bootstrap: [AppComponent]
