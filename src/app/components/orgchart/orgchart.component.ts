@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {TreeNode} from "primeng/api";
+import {MenuItem, TreeNode} from "primeng/api";
+import {FormControl, FormGroup} from "@angular/forms";
 
 enum Groups {
   COMPANY = "company",
@@ -20,13 +21,28 @@ export class OrgchartComponent implements OnInit {
   data2: TreeNode[] = [];
   selectedManager: TreeNode[] = [];
 
+  newManager: TreeNode = {};
   selectedNode: TreeNode = {};
   selectedName: string = '';
   nodeClicked: boolean = false;
+  createTeam: number = 1;
+  isChecked: boolean = true;
+  formData: FormGroup = new FormGroup({});
+  private selectedTeam: string = '';
+  items: MenuItem[] = [];
+  selectedKey: string = ' ';
 
   constructor() { }
 
   ngOnInit(): void {
+    this.formData = new FormGroup({
+      firstName: new FormControl(),
+      lastName: new FormControl(),
+      createTeamRadio: new FormControl(),
+      createTeam: new FormControl(),
+      selectTeam: new FormControl()
+    });
+
     this.data1 = [
       {
         label: 'Managers',
@@ -257,37 +273,73 @@ export class OrgchartComponent implements OnInit {
     if (typeof(this.data2[0].children) !== "undefined") {
       this.selectedManager = new Array(this.data2[0].children[0]);
     }
+
+   this.setupItemList();
+
   }
 
   onNodeSelect($event: any) {
-    this.nodeClicked = !this.nodeClicked;
-    if (this.nodeClicked) {
-      this.selectedNode = {};
-    } else {
-      this.selectedNode = $event.node;
+    this.selectedNode = $event.node;
+    if (this.selectedNode.key === Groups.TEAM_LEAD) {
+      this.selectedKey = ' Team Leader ';
+    } else if (this.selectedNode.key === Groups.AGENT) {
+      this.selectedKey = ' Agent ';
+    } else if (this.selectedNode.key === Groups.MANAGER) {
+      this.selectedKey = ' Manager ';
+    } else if (this.selectedNode.key === Groups.TEAM) {
+      this.selectedKey = ' Team ';
     }
+    this.setupItemList();
   }
 
-  editMenu(node: TreeNode) {
-    if (node.key === Groups.MANAGER) {
-      this.selectedNode = node;
-      this.selectedName = node.data.name;
-      console.log(node.label)
-    } else if (node.key === Groups.TEAM) {
-      this.selectedNode = node;
-      this.selectedName = node.data.name;
-      console.log(node.label)
-    } else if (node.key === Groups.TEAM_LEAD) {
-      this.selectedNode = node;
-      this.selectedName = node.data.name;
-      console.log(node.label)
-    } else if (node.key === Groups.AGENT) {
-      this.selectedNode = node;
-      this.selectedName = node.data.name;
-      console.log(node.label)
-    }
-  }
+  getAllTeams() {
+    let arr: any[] = [];
 
+     if (this.selectedNode.key === Groups.TEAM) {
+      arr = [];
+      arr.push({label: 'Manager'},{separator:true},)
+      if (typeof(this.data2[0].children) !== "undefined" ) {
+        this.data2[0].children.forEach(manager => {
+          if ( manager.key === Groups.MANAGER) {
+            // console.log(this.selectedNode)
+            arr.push({label: manager.data.name, command: () => this.moveItem(manager.data.name, manager.key, this.selectedNode),})
+          }
+        })
+      }
+
+    } else if (this.selectedNode.key === Groups.TEAM_LEAD) {
+      arr = [];
+      arr.push({label: 'Teams'},{separator:true},)
+      if (typeof(this.data2[0].children) !== "undefined") {
+        this.data2[0].children.forEach(manager => {
+          manager.children?.forEach(teams => {
+            // console.log(this.selectedNode)
+            console.log('Move ' + this.selectedNode.data.name)
+            console.log('to ' + teams.label)
+            arr.push({label: teams.label, command: (label: string | undefined, key: string | undefined, node: TreeNode) => this.moveItem(teams.label, teams.key, this.selectedNode),})
+          })
+        })
+      }
+    } else if (this.selectedNode.key === Groups.AGENT) {
+      arr = [];
+      arr.push({label: 'Team Leaders'},{separator:true},)
+      if (typeof(this.data2[0].children) !== "undefined") {
+        this.data2[0].children.forEach(manager => {
+          manager.children?.forEach(teams => {
+              teams.children?.forEach(team => {
+                if (team.key === Groups.TEAM_LEAD) {
+                  // console.log(this.selectedNode)
+                  arr.push({label: team.data.name, command: () => this.moveItem(team.data.name, team.key, this.selectedNode),})
+                }
+              })
+          })
+        })
+      }
+    }
+
+
+    return arr;
+  }
 
   closeAddTeamModel() {
     this.selectedNode = {};
@@ -302,7 +354,105 @@ export class OrgchartComponent implements OnInit {
 
     if (typeof(this.data2[0].children) !== "undefined") {
       this.selectedManager = new Array(this.data2[0].children[index]);
-      console.log(new Array(this.data2[0].children[index].data.name));
+
+    }
+
+  }
+
+  createOrSelectTeam() {
+    if (this.isChecked) {
+      this.isChecked = false;
+      this.createTeam = 0;
+    } else {
+      this.isChecked = true;
+      this.createTeam = 1;
+    }
+  }
+
+  createManager() {
+
+
+    if (this.isChecked) {
+      this.selectedTeam = this.formData.controls['createTeam'].value;
+    }
+    this.newManager = {
+      label: 'Manager',
+      type: 'person',
+      key: Groups.MANAGER,
+      styleClass: 'p-person',
+      expanded: false,
+      data: {name: this.formData.controls['firstName'].value + ' ' + this.formData.controls['lastName'].value, avatar: 'avatar.png' },
+      children: (this.selectedTeam === '') ? []: [{
+        label: this.selectedTeam,
+        type: 'person',
+        key: Groups.TEAM,
+        styleClass: 'p-person',
+        expanded: false,
+        data: {name: this.selectedTeam },
+      }]
+    }
+    if (typeof (this.data2[0].children) !== "undefined") {
+      this.data2[0].children.push(this.newManager);
+    }
+  }
+
+  onCloseCreateManager() {
+    this.newManager = {};
+  }
+
+  onSelectionChange($event: any) {
+    if ($event.target !== null ) {
+      this.selectedTeam = $event.target.options[$event.target.options.selectedIndex].text;
+    }
+  }
+
+
+
+  private setupItemList() {
+
+    this.items = [
+      {
+        // icon:'pi pi-ellipsis-v',
+        items:[
+
+          {
+            label:'Move' + this.selectedKey + 'to',
+            icon:'pi pi-fw pi-plus',
+            items: this.getAllTeams()
+          },
+          {
+            label:'Delete',
+            icon:'pi pi-fw pi-trash'
+          },
+          {
+            separator:true
+          },
+          {
+            label:'Export',
+            icon:'pi pi-fw pi-external-link'
+          }
+        ]
+      },
+    ];
+
+  }
+
+  private moveItem(label: string | undefined, key: string | undefined, selectedNode: TreeNode) {
+    // console.log(selectedNode)
+    // console.log(this.selectedNode)
+
+
+    if (key === Groups.MANAGER) {
+      // console.log('Move  to ' + label + '\n Groups.MANAGER')
+    } else if (key === Groups.TEAM) {
+      // this.data2.forEach(managers => {
+      //   console.log(managers + '\nGroups.TEAM')
+      // })
+      // console.log('Move   to ' + label + '\n Groups.TEAM')
+    } else if (key === Groups.TEAM_LEAD) {
+      // console.log('Move  to ' + label + '\n Groups.TEAM_LEAD')
+    } else if (key === Groups.AGENT) {
+      // console.log('Move  to ' + label + ' \nGroups.AGENT')
     }
 
   }

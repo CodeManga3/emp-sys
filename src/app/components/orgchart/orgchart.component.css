@@ -67,6 +67,41 @@
 :host /deep/ .node-content {
     text-align: center;
     border: none !important;
-    /* border: 1px solid #bdc2d6; */
     border-radius: 2px !important;
+}
+
+:host /deep/ .p-menubar {
+    align-items: flex-start !important;
+    padding: 0 !important;
+    background: none !important;
+    color: #495057;
+    border: none !important;
+    border-radius: 0 !important;
+}
+
+:host /deep/ .row>* {
+     padding-right: 0 !important;
+     padding-left: 0 !important;
+}
+
+:host /deep/ .p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link .p-submenu-icon {
+    color: white;
+    margin-left: 0.5rem;
+}
+
+:host /deep/ .p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link {
+    padding: 0 !important;
+     border-radius: 0;
+}
+
+:host /depp/ .p-menubar .p-menuitem-link {
+     padding: 0 !important;
+}
+
+:host /deep/ .p-menubar .p-submenu-list {
+    z-index: 3;
+}
+
+ body {
+    font-size: x-small !important;;
 }

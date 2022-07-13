@@ -5,8 +5,10 @@ import {OrganizationChartModule} from "primeng/organizationchart";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ToastModule} from "primeng/toast";
 import {PanelModule} from "primeng/panel";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MessageService} from "primeng/api";
+import {MenubarModule} from "primeng/menubar";
+import {MenuModule} from "primeng/menu";
 
 @NgModule({
   declarations: [
@@ -21,7 +23,10 @@ import {MessageService} from "primeng/api";
     BrowserAnimationsModule,
     ToastModule,
     PanelModule,
-    FormsModule
+    FormsModule,
+    MenubarModule,
+    ReactiveFormsModule,
+    MenuModule
   ],
   providers: [
     MessageService
