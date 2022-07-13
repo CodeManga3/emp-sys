@@ -17,14 +17,12 @@ enum Groups {
 })
 export class OrgchartComponent implements OnInit {
 
-  data1: TreeNode[] = [];
   data2: TreeNode[] = [];
   selectedManager: TreeNode[] = [];
 
   newManager: TreeNode = {};
   selectedNode: TreeNode = {};
   selectedName: string = '';
-  nodeClicked: boolean = false;
   createTeam: number = 1;
   isChecked: boolean = true;
   formData: FormGroup = new FormGroup({});
@@ -35,6 +33,7 @@ export class OrgchartComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    /*Form group to capture Manager Data*/
     this.formData = new FormGroup({
       firstName: new FormControl(),
       lastName: new FormControl(),
@@ -43,34 +42,7 @@ export class OrgchartComponent implements OnInit {
       selectTeam: new FormControl()
     });
 
-    this.data1 = [
-      {
-        label: 'Managers',
-        type: 'person',
-        key: Groups.COMPANY,
-        styleClass: 'p-person',
-        expanded: false,
-        data: { name: 'Hammond Pole'},
-        children: [
-          {
-            label: 'Manager',
-            type: 'person',
-            key: Groups.MANAGER,
-            styleClass: 'p-person',
-            expanded: false,
-            data: { name: 'Walter White', avatar: 'avatar.png' },
-          },
-          {
-            label: 'Manager',
-            type: 'person',
-            key: Groups.MANAGER,
-            styleClass: 'p-person',
-            expanded: false,
-            data: { name: 'John Adams', avatar: 'avatar.png' },
-          }
-        ],
-      }
-    ];
+    /*Main data for the chart*/
     this.data2 = [
       {
         label: 'Managers',
@@ -274,13 +246,16 @@ export class OrgchartComponent implements OnInit {
       this.selectedManager = new Array(this.data2[0].children[0]);
     }
 
+    /*This will set up the menu list to move teams, leaders and agents*/
    this.setupItemList();
 
   }
 
+  /*This method will help keep track on which node was selected on the chart*/
   onNodeSelect($event: any) {
     this.selectedNode = $event.node;
     if (this.selectedNode.key === Groups.TEAM_LEAD) {
+      /*Place team, manager or team leader the selected node to move to*/
       this.selectedKey = ' Team Leader ';
     } else if (this.selectedNode.key === Groups.AGENT) {
       this.selectedKey = ' Agent ';
@@ -289,10 +264,12 @@ export class OrgchartComponent implements OnInit {
     } else if (this.selectedNode.key === Groups.TEAM) {
       this.selectedKey = ' Team ';
     }
+    /*update  the selected list item with the correct team, manager or team leader*/
     this.setupItemList();
   }
 
   getAllTeams() {
+    /*This method will help us get all available teams in the chart*/
     let arr: any[] = [];
 
      if (this.selectedNode.key === Groups.TEAM) {
@@ -301,8 +278,9 @@ export class OrgchartComponent implements OnInit {
       if (typeof(this.data2[0].children) !== "undefined" ) {
         this.data2[0].children.forEach(manager => {
           if ( manager.key === Groups.MANAGER) {
-            // console.log(this.selectedNode)
-            arr.push({label: manager.data.name, command: () => this.moveItem(manager.data.name, manager.key, this.selectedNode),})
+            console.log('Moving to manager => ' + manager.data.name);
+            let node: TreeNode = this.selectedNode;
+            arr.push({label: manager.data.name, command: (label: string) => this.moveItem(label, node),})
           }
         })
       }
@@ -313,10 +291,9 @@ export class OrgchartComponent implements OnInit {
       if (typeof(this.data2[0].children) !== "undefined") {
         this.data2[0].children.forEach(manager => {
           manager.children?.forEach(teams => {
-            // console.log(this.selectedNode)
-            console.log('Move ' + this.selectedNode.data.name)
-            console.log('to ' + teams.label)
-            arr.push({label: teams.label, command: (label: string | undefined, key: string | undefined, node: TreeNode) => this.moveItem(teams.label, teams.key, this.selectedNode),})
+            console.log('Moving to team =>');
+            let node: TreeNode = this.selectedNode;
+            arr.push({label: teams.label, command: (label: string) => this.moveItem(label, node),})
           })
         })
       }
@@ -328,8 +305,10 @@ export class OrgchartComponent implements OnInit {
           manager.children?.forEach(teams => {
               teams.children?.forEach(team => {
                 if (team.key === Groups.TEAM_LEAD) {
-                  // console.log(this.selectedNode)
-                  arr.push({label: team.data.name, command: () => this.moveItem(team.data.name, team.key, this.selectedNode),})
+                  console.log('Moving to team leader =>');
+
+                  let node: TreeNode = this.selectedNode;
+                  arr.push({label: team.data.name, command: (label: string) => this.moveItem(label, node),})
                 }
               })
           })
@@ -337,7 +316,7 @@ export class OrgchartComponent implements OnInit {
       }
     }
 
-
+    /*return the teams*/
     return arr;
   }
 
@@ -346,6 +325,7 @@ export class OrgchartComponent implements OnInit {
     this.selectedName = '';
   }
 
+  /*Get the selected manager from the select option and display them on the chart*/
   changeSelectedManager(event:any) {
     let index:number =  event.target["selectedIndex"];
     if(index ==-1) {
@@ -354,11 +334,10 @@ export class OrgchartComponent implements OnInit {
 
     if (typeof(this.data2[0].children) !== "undefined") {
       this.selectedManager = new Array(this.data2[0].children[index]);
-
     }
-
   }
 
+  /*This method will help dertemine to select a team from the current list or create a new team*/
   createOrSelectTeam() {
     if (this.isChecked) {
       this.isChecked = false;
@@ -369,9 +348,8 @@ export class OrgchartComponent implements OnInit {
     }
   }
 
+  /*This methd will take the captured data and add a manager to the chart*/
   createManager() {
-
-
     if (this.isChecked) {
       this.selectedTeam = this.formData.controls['createTeam'].value;
     }
@@ -409,12 +387,9 @@ export class OrgchartComponent implements OnInit {
 
 
   private setupItemList() {
-
     this.items = [
       {
-        // icon:'pi pi-ellipsis-v',
         items:[
-
           {
             label:'Move' + this.selectedKey + 'to',
             icon:'pi pi-fw pi-plus',
@@ -437,23 +412,23 @@ export class OrgchartComponent implements OnInit {
 
   }
 
-  private moveItem(label: string | undefined, key: string | undefined, selectedNode: TreeNode) {
-    // console.log(selectedNode)
-    // console.log(this.selectedNode)
+  private moveItem(label: string, selectedNode: TreeNode) {
+    console.log(selectedNode)
+    console.log(label)
 
 
-    if (key === Groups.MANAGER) {
-      // console.log('Move  to ' + label + '\n Groups.MANAGER')
-    } else if (key === Groups.TEAM) {
-      // this.data2.forEach(managers => {
-      //   console.log(managers + '\nGroups.TEAM')
-      // })
-      // console.log('Move   to ' + label + '\n Groups.TEAM')
-    } else if (key === Groups.TEAM_LEAD) {
-      // console.log('Move  to ' + label + '\n Groups.TEAM_LEAD')
-    } else if (key === Groups.AGENT) {
-      // console.log('Move  to ' + label + ' \nGroups.AGENT')
-    }
+    // if (key === Groups.MANAGER) {
+    //   // console.log('Move  to ' + label + '\n Groups.MANAGER')
+    // } else if (key === Groups.TEAM) {
+    //   // this.data2.forEach(managers => {
+    //   //   console.log(managers + '\nGroups.TEAM')
+    //   // })
+    //   // console.log('Move   to ' + label + '\n Groups.TEAM')
+    // } else if (key === Groups.TEAM_LEAD) {
+    //   // console.log('Move  to ' + label + '\n Groups.TEAM_LEAD')
+    // } else if (key === Groups.AGENT) {
+    //   // console.log('Move  to ' + label + ' \nGroups.AGENT')
+    // }
 
   }
 }
