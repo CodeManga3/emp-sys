@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {MenuItem, TreeNode} from "primeng/api";
 import {FormControl, FormGroup} from "@angular/forms";
+import * as _ from 'lodash';
 
 enum Groups {
   COMPANY = "company",
@@ -29,6 +30,7 @@ export class OrgchartComponent implements OnInit {
   private selectedTeam: string = '';
   items: MenuItem[] = [];
   selectedKey: string = ' ';
+  highestID: number = 1;
 
   constructor() { }
 
@@ -50,7 +52,7 @@ export class OrgchartComponent implements OnInit {
         key: Groups.COMPANY,
         styleClass: 'p-person',
         expanded: false,
-        data: { name: 'Hammond Pole'},
+        data: { name: 'Hammond Pole', id: 1},
         children: [
           {
             label: 'Manager',
@@ -58,7 +60,7 @@ export class OrgchartComponent implements OnInit {
             key: Groups.MANAGER,
             styleClass: 'p-person',
             expanded: false,
-            data: { name: 'Walter White', avatar: 'avatar.png' },
+            data: { name: 'Walter White', avatar: `bi bi-person-circle`, id: 2 },
             children: [
               {
                 label: 'Collections Team',
@@ -66,7 +68,7 @@ export class OrgchartComponent implements OnInit {
                 styleClass: 'department-coo',
                 key: Groups.TEAM,
                 expanded: false,
-                data: { name: 'Collections Team' },
+                data: { name: 'Collections Team', avatar: 'bi bi-people', id: 3 },
                 children: [
                   {
                     label: 'Team Leader',
@@ -74,21 +76,21 @@ export class OrgchartComponent implements OnInit {
                     key: Groups.TEAM_LEAD,
                     styleClass: 'p-person',
                     expanded: false,
-                    data: { name: 'John Smith', avatar: 'avatar.png' },
+                    data: { name: 'John Smith', avatar: 'bi bi-people',  id: 4 },
                     children: [
                       {
                         label: 'Agent',
                         key: Groups.AGENT,
                         type: 'person',
                         styleClass: 'p-person',
-                        data: { name: 'Lebo Skhosana', avatar: 'avatar.png' },
+                        data: { name: 'Nasreen Motani', avatar: 'bi bi-person-square', id: 5 },
                       },
                       {
                         label: 'Agent',
                         key: Groups.AGENT,
                         type: 'person',
                         styleClass: 'p-person',
-                        data: { name: 'Eden Spai', avatar: 'avatar.png' },
+                        data: { name: 'Keygan Keneer', avatar: 'bi bi-person-square', id: 6 },
                       },
                     ],
                   },
@@ -100,7 +102,7 @@ export class OrgchartComponent implements OnInit {
                 styleClass: 'department-coo',
                 type: 'person',
                 key: Groups.TEAM,
-                data: { name: 'Collections Team' },
+                data: { name: 'Litigations Team', avatar: 'bi bi-people', id: 7 },
                 expanded: false,
                 children: [
                   {
@@ -109,14 +111,14 @@ export class OrgchartComponent implements OnInit {
                     key: Groups.TEAM_LEAD,
                     styleClass: 'p-person',
                     expanded: false,
-                    data: { name: 'Sam Mazibuko', avatar: 'avatar.png' },
+                    data: { name: 'Joe Rogen', avatar: 'bi bi-people', id: 8 },
                     children: [
                       {
                         label: 'Agent',
                         key: Groups.AGENT,
                         type: 'person',
                         styleClass: 'p-person',
-                        data: { name: 'Lebo Skhosana', avatar: 'avatar.png' },
+                        data: { name: 'Anel Jacobs', avatar: 'bi bi-person-square', id: 22 },
                       },
                     ],
                   },
@@ -130,7 +132,7 @@ export class OrgchartComponent implements OnInit {
             key: Groups.MANAGER,
             styleClass: 'p-person',
             expanded: false,
-            data: { name: 'James Mahlangu', avatar: 'avatar.png' },
+            data: { name: 'James Mahlangu', avatar: 'bi bi-person-circle', id: 9 },
             children: [
               {
                 label: 'Labour Law Team',
@@ -138,7 +140,7 @@ export class OrgchartComponent implements OnInit {
                 styleClass: 'department-coo',
                 key: Groups.TEAM,
                 expanded: false,
-                data: { name: 'Labour Law Team' },
+                data: { name: 'Labour Law Team', avatar: 'bi bi-people', id: 10 },
 
               }
             ],
@@ -149,7 +151,7 @@ export class OrgchartComponent implements OnInit {
             key: Groups.MANAGER,
             styleClass: 'p-person',
             expanded: false,
-            data: { name: 'John Adams', avatar: 'avatar.png' },
+            data: { name: 'John Adams', avatar: 'bi bi-person-circle', id: 11 },
             children: [
               {
                 label: 'Conveyancing Team',
@@ -157,7 +159,7 @@ export class OrgchartComponent implements OnInit {
                 styleClass: 'department-coo',
                 key: Groups.TEAM,
                 expanded: false,
-                data: { name: 'Collections Team' },
+                data: { name: 'Conveyancing Team', avatar: 'bi bi-people', id: 12 },
                 children: [
                   {
                     label: 'Team Leader',
@@ -165,21 +167,21 @@ export class OrgchartComponent implements OnInit {
                     key: Groups.TEAM_LEAD,
                     styleClass: 'p-person',
                     expanded: false,
-                    data: { name: 'Edward Males', avatar: 'avatar.png' },
+                    data: { name: 'Edward Males', avatar: 'bi bi-people', id: 13 },
                     children: [
                       {
                         label: 'Agent',
                         key: Groups.AGENT,
                         type: 'person',
                         styleClass: 'p-person',
-                        data: { name: 'Lebo Skhosana', avatar: 'avatar.png' },
+                        data: { name: 'Ria Van Veer', avatar: 'bi bi-person-square', id: 14 },
                       },
                       {
                         label: 'Agent',
                         key: Groups.AGENT,
                         type: 'person',
                         styleClass: 'p-person',
-                        data: { name: 'Eden Spai', avatar: 'avatar.png' },
+                        data: { name: 'Zodwa Nkosi', avatar: 'bi bi-person-square', id: 15 },
                       },
                     ],
                   },
@@ -189,21 +191,21 @@ export class OrgchartComponent implements OnInit {
                     key: Groups.TEAM_LEAD,
                     styleClass: 'p-person',
                     expanded: false,
-                    data: { name: 'Sihle Mthimunye', avatar: 'avatar.png' },
+                    data: { name: 'Sihle Mthimunye', avatar: 'bi bi-people', id: 16 },
                     children: [
                       {
                         label: 'Agent',
                         key: Groups.AGENT,
                         type: 'person',
                         styleClass: 'p-person',
-                        data: { name: 'Lebo Skhosana', avatar: 'avatar.png' },
+                        data: { name: 'Lebo Skhosana', avatar: 'bi bi-person-square', id: 17 },
                       },
                       {
                         label: 'Agent',
                         key: Groups.AGENT,
                         type: 'person',
                         styleClass: 'p-person',
-                        data: { name: 'Eden Spai', avatar: 'avatar.png' },
+                        data: { name: 'Eden Spai', avatar: 'bi bi-person-square', id: 18 },
                       },
                     ],
                   }
@@ -215,7 +217,7 @@ export class OrgchartComponent implements OnInit {
                 styleClass: 'department-coo',
                 type: 'person',
                 key: Groups.TEAM,
-                data: { name: 'Collections Team' },
+                data: { name: 'Collections Team', avatar: 'bi bi-people', id: 19 },
                 expanded: false,
                 children: [
                   {
@@ -224,14 +226,14 @@ export class OrgchartComponent implements OnInit {
                     key: Groups.TEAM_LEAD,
                     styleClass: 'p-person',
                     expanded: false,
-                    data: { name: 'Sam Mazibuko', avatar: 'avatar.png' },
+                    data: { name: 'Sam Mazibuko', avatar: 'bi bi-people', id: 20 },
                     children: [
                       {
                         label: 'Agent',
                         key: Groups.AGENT,
                         type: 'person',
                         styleClass: 'p-person',
-                        data: { name: 'Lebo Skhosana', avatar: 'avatar.png' },
+                        data: { name: 'Ndivho Mokwevho', avatar: 'bi bi-person-square', id: 21 },
                       },
                     ],
                   },
@@ -246,8 +248,14 @@ export class OrgchartComponent implements OnInit {
       this.selectedManager = new Array(this.data2[0].children[0]);
     }
 
+    this.highestID = this.getTheHighestID();
+
+    // this.deleteManagerById(2);
+    // this.deleteTeamByID(7)
+    // this.deleteTeamLeaderByID(8)
+    // this.deleteAgentByID(22)
     /*This will set up the menu list to move teams, leaders and agents*/
-   this.setupItemList();
+   // this.setupItemList();
 
   }
 
@@ -265,59 +273,7 @@ export class OrgchartComponent implements OnInit {
       this.selectedKey = ' Team ';
     }
     /*update  the selected list item with the correct team, manager or team leader*/
-    this.setupItemList();
-  }
-
-  getAllTeams() {
-    /*This method will help us get all available teams in the chart*/
-    let arr: any[] = [];
-
-     if (this.selectedNode.key === Groups.TEAM) {
-      arr = [];
-      arr.push({label: 'Manager'},{separator:true},)
-      if (typeof(this.data2[0].children) !== "undefined" ) {
-        this.data2[0].children.forEach(manager => {
-          if ( manager.key === Groups.MANAGER) {
-            console.log('Moving to manager => ' + manager.data.name);
-            let node: TreeNode = this.selectedNode;
-            arr.push({label: manager.data.name, command: (label: string) => this.moveItem(label, node),})
-          }
-        })
-      }
-
-    } else if (this.selectedNode.key === Groups.TEAM_LEAD) {
-      arr = [];
-      arr.push({label: 'Teams'},{separator:true},)
-      if (typeof(this.data2[0].children) !== "undefined") {
-        this.data2[0].children.forEach(manager => {
-          manager.children?.forEach(teams => {
-            console.log('Moving to team =>');
-            let node: TreeNode = this.selectedNode;
-            arr.push({label: teams.label, command: (label: string) => this.moveItem(label, node),})
-          })
-        })
-      }
-    } else if (this.selectedNode.key === Groups.AGENT) {
-      arr = [];
-      arr.push({label: 'Team Leaders'},{separator:true},)
-      if (typeof(this.data2[0].children) !== "undefined") {
-        this.data2[0].children.forEach(manager => {
-          manager.children?.forEach(teams => {
-              teams.children?.forEach(team => {
-                if (team.key === Groups.TEAM_LEAD) {
-                  console.log('Moving to team leader =>');
-
-                  let node: TreeNode = this.selectedNode;
-                  arr.push({label: team.data.name, command: (label: string) => this.moveItem(label, node),})
-                }
-              })
-          })
-        })
-      }
-    }
-
-    /*return the teams*/
-    return arr;
+    // this.setupItemList();
   }
 
   closeAddTeamModel() {
@@ -359,7 +315,11 @@ export class OrgchartComponent implements OnInit {
       key: Groups.MANAGER,
       styleClass: 'p-person',
       expanded: false,
-      data: {name: this.formData.controls['firstName'].value + ' ' + this.formData.controls['lastName'].value, avatar: 'avatar.png' },
+      data: {
+        name: this.formData.controls['firstName'].value + ' ' + this.formData.controls['lastName'].value,
+        avatar: 'bi bi-person-square',
+        id: ++this.highestID
+      },
       children: (this.selectedTeam === '') ? []: [{
         label: this.selectedTeam,
         type: 'person',
@@ -372,6 +332,7 @@ export class OrgchartComponent implements OnInit {
     if (typeof (this.data2[0].children) !== "undefined") {
       this.data2[0].children.push(this.newManager);
     }
+    this.formData.reset();
   }
 
   onCloseCreateManager() {
@@ -384,51 +345,196 @@ export class OrgchartComponent implements OnInit {
     }
   }
 
-
-
-  private setupItemList() {
-    this.items = [
-      {
-        items:[
-          {
-            label:'Move' + this.selectedKey + 'to',
-            icon:'pi pi-fw pi-plus',
-            items: this.getAllTeams()
-          },
-          {
-            label:'Delete',
-            icon:'pi pi-fw pi-trash'
-          },
-          {
-            separator:true
-          },
-          {
-            label:'Export',
-            icon:'pi pi-fw pi-external-link'
-          }
-        ]
-      },
-    ];
-
+  getAllManagers(){
+    let arr: TreeNode[] = [];
+    if (typeof (this.data2[0].children) !== "undefined") {
+      this.data2[0].children.forEach(manager => { arr.push(manager) });
+    }
+    return arr;
   }
 
-  private moveItem(label: string, selectedNode: TreeNode) {
-    console.log(selectedNode)
-    console.log(label)
+  getAllTeams() {
+    let arr: TreeNode[] = [];
+    if (typeof (this.data2[0].children) !== "undefined") {
+      this.data2[0].children.forEach(manager => {
+        manager.children?.forEach(teams => {
+          arr.push(teams);
+        })
+      })
+    }
+    return arr;
+  }
 
+  getAllTeamLeaders() {
+    let arr: TreeNode[] = [];
+    if (typeof (this.data2[0].children) !== "undefined") {
+      this.data2[0].children.forEach(manager => {
+        manager.children?.forEach(teams => {
+          teams.children?.forEach(leader => {
+            arr.push(leader);
+          })
+        })
+      })
+    }
+    return arr;
+  }
 
-    // if (key === Groups.MANAGER) {
-    //   // console.log('Move  to ' + label + '\n Groups.MANAGER')
-    // } else if (key === Groups.TEAM) {
-    //   // this.data2.forEach(managers => {
-    //   //   console.log(managers + '\nGroups.TEAM')
-    //   // })
-    //   // console.log('Move   to ' + label + '\n Groups.TEAM')
-    // } else if (key === Groups.TEAM_LEAD) {
-    //   // console.log('Move  to ' + label + '\n Groups.TEAM_LEAD')
-    // } else if (key === Groups.AGENT) {
-    //   // console.log('Move  to ' + label + ' \nGroups.AGENT')
-    // }
+  moveSelected(nodeToMove: TreeNode, nodeToMoveTo: TreeNode) {
+    if (nodeToMove.key === Groups.TEAM) {
+      /*Moving a team to a manager*/
+      this.deleteTeamByID(nodeToMove.data.id);
+      this.addTeamToManager(nodeToMove, nodeToMoveTo);
+    } else if (nodeToMove.key === Groups.TEAM_LEAD) {
+      /*Moving a team leader to a team*/
+      this.deleteTeamLeaderByID(nodeToMove.data.id);
+      this.addTeamLeadToTeam(nodeToMove, nodeToMoveTo);
+    } else if (nodeToMove.key === Groups.AGENT) {
+      /*Moving an agent to a team leader*/
+      this.deleteAgentByID(nodeToMove.data.id);
+      this.addAgentToTeamLead(nodeToMove, nodeToMoveTo);
+    }
+  }
 
+  getTheHighestID() {
+    let id: number = 1;
+    if (typeof (this.data2[0].children) !== "undefined") {
+      this.data2[0].children.forEach(manager => {
+        id = (id >= manager.data.id) ? id : manager.data.id;
+        manager.children?.forEach(teams => {
+          id = (id >= teams.data.id) ? id : teams.data.id;
+          teams.children?.forEach(leader => {
+            id = (id >= leader.data.id) ? id : leader.data.id;
+            leader.children?.forEach(agent => {
+              id = (id >= agent.data.id) ? id : agent.data.id;
+            })
+          })
+        })
+      })
+    }
+    return id;
+  }
+
+  getUserById(id: number): TreeNode {
+    let user: TreeNode = {};
+    if (typeof (this.data2[0].children) !== "undefined") {
+      this.data2[0].children.forEach(manager => {
+        if (id === manager.data.id)  user = manager;
+        manager.children?.forEach(teams => {
+          if (id >= teams.data.id) user = teams;
+          teams.children?.forEach(leader => {
+            if (id >= leader.data.id) user = leader;
+            leader.children?.forEach(agent => {
+              if (id >= agent.data.id) user = agent;
+            })
+          })
+        })
+      })
+    }
+    return user;
+  }
+
+  deleteUserById(id: number) {
+    if (typeof (this.data2[0].children) !== "undefined") {
+       _.remove(this.data2[0].children, (item) => item.data.id === id);
+    }
+  }
+
+  deleteManagerById(id: number): boolean{
+    let deleted: boolean = false;
+    if (typeof (this.data2[0].children) !== "undefined") {
+      deleted = (_.remove(this.data2[0].children,
+          (manager) => manager.data.id === id).length !== 0);
+    }
+    return deleted;
+  }
+
+  deleteTeamByID(id: number): boolean {
+    let deleted: boolean = false;
+    if (typeof (this.data2[0].children) !== "undefined") {
+      _.forEach(this.data2[0].children, (manager) => {
+        // @ts-ignore
+        deleted = (_.remove(manager.children,
+              (team) => team.data.id === id).length !== 0);
+      })
+    }
+    return deleted;
+  }
+
+  deleteTeamLeaderByID(id: number): boolean {
+    let deleted: boolean = false;
+    if (typeof (this.data2[0].children) !== "undefined") {
+      _.forEach(this.data2[0].children, (manager) => {
+        _.forEach(manager.children, (team) => {
+          // @ts-ignore
+          deleted = (_.remove(team.children,
+              (leader) => leader.data.id === id).length !== 0);
+        })
+      })
+    }
+    return deleted;
+  }
+
+  deleteAgentByID(id: number): boolean {
+    let deleted: boolean = false;
+    if (typeof (this.data2[0].children) !== "undefined") {
+      _.forEach(this.data2[0].children, (manager) => {
+        _.forEach(manager.children, (team) => {
+          _.forEach(team.children, (leader) => {
+            // @ts-ignore
+            deleted = (_.remove(leader.children,
+                (agent) => agent.data.id === id).length !== 0);
+          })
+        })
+      })
+    }
+    return deleted;
+  }
+
+  private addTeamToManager(teamToAdd: TreeNode, managerToAddTo: TreeNode) {
+    if (typeof (this.data2[0].children) !== "undefined") {
+      _.forEach(this.data2[0].children, (manager) => {
+        if (manager.data.id === managerToAddTo.data.id) {
+          if (typeof (manager.children) === "undefined") {
+            manager.children = [teamToAdd];
+          } else {
+            manager.children?.push(teamToAdd);
+          }
+        }
+      })
+    }
+  }
+
+  private addTeamLeadToTeam(teamLeadToAdd: TreeNode, teamToAddTo: TreeNode) {
+    if (typeof (this.data2[0].children) !== "undefined") {
+      _.forEach(this.data2[0].children, (manager) => {
+        _.forEach(manager.children, (team) => {
+          if (team.data.id === teamToAddTo.data.id) {
+            if (typeof (team.children) === "undefined") {
+              team.children = [teamLeadToAdd];
+            } else {
+              team.children?.push(teamLeadToAdd);
+            }
+          }
+        })
+      })
+    }
+  }
+
+  private addAgentToTeamLead(nodeToAdd: TreeNode, teamLeadToMoveTo: TreeNode) {
+    if (typeof (this.data2[0].children) !== "undefined") {
+      _.forEach(this.data2[0].children, (manager) => {
+        _.forEach(manager.children, (team) => {
+          _.forEach(team.children, (teamLead) => {
+            if (teamLead.data.id === teamLeadToMoveTo.data.id) {
+              if (typeof (teamLead.children) === "undefined") {
+                teamLead.children = [nodeToAdd];
+              } else {
+                teamLead.children?.push(nodeToAdd);
+              }
+            }
+          })
+        })
+      })
+    }
   }
 }

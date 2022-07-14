@@ -17,6 +17,7 @@
                 </select>
             </div>
         </div>
+
         <div class="row">
             <!--Add a Manager-->
             <div class="col-md-12">
@@ -29,14 +30,41 @@
                         <div class="node-header p-corner-top">
                             <div class="row">
                                 <div class="col-md-8">{{ node.label }}</div>
-                                <div *ngIf="node.key !== 'manager'" class="col-md-2">
+                                <div *ngIf="node.key !== 'manager'" class="col-md-1">
                                     <!--List of items based on the selected node-->
-                                    <p-menubar [model]="items" style=""></p-menubar>
+                                    <button mat-icon-button [matMenuTriggerFor]="moveitems" aria-label="Example icon-button with a menu">
+                                        <mat-icon>more_vert</mat-icon>
+                                    </button>
+
+                                    <mat-menu #moveitems="matMenu">
+                                        <button mat-menu-item [matMenuTriggerFor]="managers">Move Team To</button>
+                                        <button mat-menu-item [matMenuTriggerFor]="teams">Move Team Lead To</button>
+                                        <button mat-menu-item [matMenuTriggerFor]="teamleader">Move Agent To</button>
+                                    </mat-menu>
+
+                                    <mat-menu #managers="matMenu">
+                                        <button mat-menu-item>Managers</button>
+                                        <mat-divider></mat-divider>
+                                        <button mat-menu-item *ngFor="let manager of getAllManagers()" (click)="moveSelected(node,manager)">{{manager.data.name}}</button>
+                                    </mat-menu>
+
+                                    <mat-menu #teams="matMenu">
+                                        <button mat-menu-item>Teams</button>
+                                        <mat-divider></mat-divider>
+                                        <button mat-menu-item *ngFor="let team of getAllTeams()" (click)="moveSelected(node, team)">{{team.data.name}}</button>
+                                    </mat-menu>
+
+                                    <mat-menu #teamleader="matMenu">
+                                        <button mat-menu-item>Team Leaders</button>
+                                        <mat-divider></mat-divider>
+                                        <button mat-menu-item *ngFor="let leader of getAllTeamLeaders()" (click)="moveSelected(node, leader)">{{leader.data.name}}</button>
+                                    </mat-menu>
+
                                 </div>
                             </div>
                         </div>
                         <div class="node-content" *ngIf="node.key !== 'team' && node.key !== 'company'">
-                            <img src="app/assets/images/{{node.data.avatar}}" width="32" alt="avatar">
+                            <i class="{{node.data.avatar}}"></i>
                             <div>{{ node.data.name }}</div>
                         </div>
 
@@ -131,7 +159,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="onCloseCreateManager()">Close</button>
-                <button type="button" class="btn btn-primary"   (click)="createManager()">Save</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"  (click)="createManager()">Save</button>
             </div>
         </div>
     </div>
